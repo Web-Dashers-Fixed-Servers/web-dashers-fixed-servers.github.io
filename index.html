@@ -67,13 +67,18 @@
                 }
                 var attempts = 0;
                 var lastError = null;
-                var retryableStatuses = [408, 425, 429, 500, 502, 503, 504, 520, 521, 522, 523, 524];
+                var requestTemplate = isRequestObj ? new Request(input, init) : null;
+                var method = (init && init.method) || (isRequestObj && input.method) || "GET";
+                var safeToRetryAnyTransientStatus = method.toUpperCase() === "GET" || method.toUpperCase() === "HEAD";
+                var retryableStatuses = safeToRetryAnyTransientStatus
+                    ? [408, 425, 429, 500, 502, 503, 504, 520, 521, 522, 523, 524]
+                    : [429, 503];
                 function tryHost(hostIndex) {
                     var host = GD_PROXY_HOSTS[hostIndex];
                     var attemptUrl = withHost(url, oldHost, host);
-                    var attemptInput = isRequestObj ? new Request(attemptUrl, input.clone()) : attemptUrl;
+                    var attemptInput = isRequestObj ? new Request(attemptUrl, requestTemplate.clone()) : attemptUrl;
 
-                    return nativeFetch(attemptInput, init).then(function (res) {
+                    return nativeFetch(attemptInput, isRequestObj ? undefined : init).then(function (res) {
                         var shouldRetry = retryableStatuses.indexOf(res.status) !== -1;
                         if (shouldRetry && attempts < GD_PROXY_HOSTS.length - 1) {
                             attempts++;
