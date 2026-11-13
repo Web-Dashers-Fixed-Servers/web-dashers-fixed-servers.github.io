@@ -67,22 +67,34 @@
                 }
                 var attempts = 0;
                 var lastError = null;
+                var requestTemplate = isRequestObj ? new Request(input, init) : null;
+                var method = (init && init.method) || (isRequestObj && input.method) || "GET";
+                var safeToRetryAnyTransientStatus = method.toUpperCase() === "GET" || method.toUpperCase() === "HEAD";
+                var retryableStatuses = safeToRetryAnyTransientStatus
+                    ? [408, 425, 429, 500, 502, 503, 504, 520, 521, 522, 523, 524]
+                    : [429, 503];
                 function tryHost(hostIndex) {
                     var host = GD_PROXY_HOSTS[hostIndex];
                     var attemptUrl = withHost(url, oldHost, host);
-                    var attemptInput = isRequestObj ? new Request(attemptUrl, input) : attemptUrl;
+                    var attemptInput = isRequestObj ? new Request(attemptUrl, requestTemplate.clone()) : attemptUrl;
 
-                    return nativeFetch(attemptInput, init).then(function (res) {
-                        if ((res.status === 429 || res.status === 503) && attempts < GD_PROXY_HOSTS.length - 1) {
+                    return nativeFetch(attemptInput, isRequestObj ? undefined : init).then(function (res) {
+                        var shouldRetry = retryableStatuses.indexOf(res.status) !== -1;
+                        if (shouldRetry && attempts < GD_PROXY_HOSTS.length - 1) {
                             attempts++;
                             var nextIndex = (hostIndex + 1) % GD_PROXY_HOSTS.length;
                             return tryHost(nextIndex);
                         }
-                        activeIndex = hostIndex;
-                        window._gdProxyUrl = host;
+                        if (!shouldRetry) {
+                            activeIndex = hostIndex;
+                            window._gdProxyUrl = host;
+                        }
                         return res;
                     }, function (err) {
                         lastError = err;
+                        if (err && err.name === "AbortError") {
+                            throw err;
+                        }
                         if (attempts < GD_PROXY_HOSTS.length - 1) {
                             attempts++;
                             var nextIndex = (hostIndex + 1) % GD_PROXY_HOSTS.length;
