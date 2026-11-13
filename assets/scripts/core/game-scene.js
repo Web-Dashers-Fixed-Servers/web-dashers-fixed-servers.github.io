@@ -5832,8 +5832,8 @@ _buildSettingsPopup() {
       { text: "arbstro, and aloaf", scale: 0.7, font: "goldFont" },
       { text: "Contributors:", scale: 0.9, font: "bigFont" },
       { text: "t0nchi7, Itzar, zainojdaf,", scale: 0.7, font: "goldFont" },
-      { text: "Ameth7st, and CoraBitz", scale: 0.7, font: "goldFont" },
-      { text: "2Crafty", scale: 0.7, font: "goldFont" },
+      { text: "Ameth7st, CoraBitz,", scale: 0.7, font: "goldFont" },
+      { text: "and 2Crafty", scale: 0.7, font: "goldFont" },
       { text: "we love you cora <3", scale: 0.4, font: "bigFont" },
       { text: "© 2026 RobTop Games. All rights reserved.", scale: 0.4, font: "Arial", color: 0x000000 },
     ]; 
@@ -6491,7 +6491,10 @@ _showwippopup() {
       { text: "To anyone who is wondering\nwhy online features don't work,\nthe worker is constantly being\nused and its request limit\nis hit daily in a short time\ndue to many users using\nthe online levels feature.\nThis has hopefully been\nfixed now with this update.\n- rohanis0000", scale: 0.7, color: 0xaaddff },
       { text: "Added 2 new proxies to fall back\nto when ones request limit is\n hit to allow you to still\nbe able to use online features.", scale: 0.65 },
       { text: "November 13, 2026", scale: 0.8, font: "goldFont" },
-      { text: "Improved proxy failover reliability.\nTemporary server errors can now trigger\nsafer fallback retries, while requests\nthat should not be repeated are handled\nmore carefully.\n- 2Crafty", scale: 0.68, color: 0xaaddff }
+      { text: "Improved proxy failover reliability.\nTemporary server errors can now trigger\nsafer fallback retries, while requests\nthat should not be repeated are handled\nmore carefully.\n- 2Crafty", scale: 0.68, color: 0xaaddff },
+      { text: "Sorry for the 10 hour downtime\ni forgot to change the proxy\nurl because i changed the\nsubdomain - rohanis0000", scale: 0.7, color: 0xaaddff },
+      { text: "To anyone who is wondering\nwhy online features don't work,\nthe worker is constantly being\nused and its request limit\nis hit daily in a short time\ndue to many users using\nthe online levels feature.\nThis has hopefully been\nfixed now with this update.\n- rohanis0000", scale: 0.7, color: 0xaaddff },
+      { text: "Added 2 new proxies to fall back\nto when ones request limit is\n hit to allow you to still\nbe able to use online features.", scale: 0.65 }
     ]; 
     let yPos = 0;
     const lineItems = [];
